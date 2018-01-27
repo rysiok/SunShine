@@ -34,7 +34,7 @@ const
  *
  * */
 
-describe('Check departments list page', function(){
+describe('Check Time zones', function(){
   let
     driver,
     user_email,
@@ -67,8 +67,8 @@ describe('Check departments list page', function(){
       driver      : driver,
       form_params : [{
         selector        : company_edit_form_id+' select[name="timezone"]',
-        option_selector : 'option[value="Australia/Sydney"]',
-        value           : 'Australia/Sydney',
+        option_selector : 'option[value="Pacific/Auckland"]',
+        value           : 'Pacific/Auckland',
       }],
       submit_button_selector : company_edit_form_id+' button[type="submit"]',
       message                : /successfully/i,
@@ -111,7 +111,7 @@ describe('Check departments list page', function(){
       driver : driver,
     })
     .then(() => driver.findElement(By.css(
-      'table.calendar_month td.half_1st.day_'+moment(today_aus).format('D')+'.current_day_cell'
+      'table.team-view-table td.half_1st.day_'+moment(today_aus).format('D')+'.current_day_cell'
     )))
     .then(el => {
       expect(el, 'Ensure that current date is marked correctly').to.exist;
@@ -224,7 +224,7 @@ describe('Check departments list page', function(){
       driver : driver,
     })
     .then(() => driver.findElement(By.css(
-      'table.calendar_month td.half_1st.day_'+moment(today_usa).format('D')+'.current_day_cell'
+      'table.team-view-table td.half_1st.day_'+moment(today_usa).format('D')+'.current_day_cell'
     )))
     .then(el => {
       expect(el, 'Ensure that current date is marked correctly').to.exist;
