@@ -1,17 +1,17 @@
 {
-  "allow_create_new_accounts" : true,
-  "send_emails"              : false,
-  "application_sender_email" : "email@test.com",
+  "allow_create_new_accounts" : false,
+  "send_emails"              : true,
+  "application_sender_email" : "ryszard.krakowiak@wolterskluwer.com",
   "email_transporter" : {
-    "host" : "localhost",
+    "host" : "127.0.0.1",
     "port" : 25,
-    "auth" : {
-      "user" : "user",
-      "pass" : "pass"
+    "secure" : false,
+    "tls" : {
+        "rejectUnauthorized": false
     }
   },
   "ga_analytics_on" : false,
-  "crypto_secret" : "!2~`HswpPPLa22+=±§sdq qwe,appp qwwokDF_",
-  "application_domain" : "http://app.timeoff.management",
-  "promotion_website_domain" : "http://timeoff.management"
+  "crypto_secret" : "!2~`HswpPPLa33+=±§sdq qwe,Dppp q#wok$F_",
+  "application_domain" : "https://sunshine.wolterskluwer.pl",
+  "promotion_website_domain" : "https://sunshine.wolterskluwer.pl"
 }

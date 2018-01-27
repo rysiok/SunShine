@@ -41,7 +41,7 @@ var session = require('express-session');
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 app.use(session({
-    secret            : 'my dirty secret ;khjsdkjahsdajhasdam,nnsnad,',
+    secret            : 'my 2384uksadjknasd98vfd8asdkfl2k3;ljlk4',
     resave            : false,
     saveUninitialized : false,
     store: new SequelizeStore({
