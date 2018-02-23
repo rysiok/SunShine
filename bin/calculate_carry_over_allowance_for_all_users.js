@@ -5,9 +5,9 @@ const
   Promise = require('bluebird'),
   models = require('../lib/model/db');
 
-const
-  YEAR_FROM = '2017',
-  YEAR_TO   = '2018';
+var
+  YEAR_FROM = moment().format('YYYY'),
+  YEAR_TO   = moment().add(1, 'year').format('YYYY');
 
 /*
  *  1. Get all users

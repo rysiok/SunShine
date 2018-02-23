@@ -11,9 +11,6 @@ const
   Promise = require('bluebird'),
   models = require('../lib/model/db');
 
-const
-  YEAR_FROM = '2018';
-
 var currentYear = moment().format('YYYY');
 
 
