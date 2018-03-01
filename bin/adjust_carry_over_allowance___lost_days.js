@@ -29,6 +29,20 @@ var currentYear = moment().format('YYYY'),
  *
  * */
 
+    /* hashify_password( password_string ) : string
+     *
+     * For provided string return hashed string.
+     *
+     * */
+    var hashify_password = function( password ) {
+      return crypto
+        .createHash('md5')
+        .update(password + config.get('crypto_secret'))
+        .digest('hex');
+    };
+
+    //console.log(hashify_password('Qwerasdf')); return;
+
 
 
 models.User
