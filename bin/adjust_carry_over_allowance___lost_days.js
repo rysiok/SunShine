@@ -11,7 +11,9 @@ const
   Promise = require('bluebird'),
   models = require('../lib/model/db');
 
-var currentYear = moment().format('YYYY');
+var currentYear = moment().format('YYYY'),
+    startDate = moment({ year : currentYear, month :0, day :1}).format('YYYY-MM-DD'),
+    endDate = moment({ year : currentYear, month :2, day :31}).format('YYYY-MM-DD');
 
 
 /*  run script at certain date, it will adjust reamining days according to carried over allowance
@@ -36,7 +38,7 @@ models.User
     user => {
       return user
         .reload_with_leave_details({})
-		 .then(user => user.calculate_number_of_days_taken_from_allowance({}))
+		 .then(user => user.calculate_number_of_days_taken_from_allowance({startDate:startDate, endDate:endDate}))
 		  .then(taken => {
           return user.promise_to_update_allowance_adjustment({
             id    : user.id,
@@ -44,7 +46,7 @@ models.User
 			currentYear : currentYear,
           });
         })
-        .then(() => Promise.resolve(console.log('Done with user ' + user.id)));
+        .then(() => Promise.resolve(console.log('Done with user ' + user.name + user.lastname)));
     },
     {concurrency : 1}
   ));
