@@ -1,17 +1,21 @@
 
 'use strict';
 
-var test                 = require('selenium-webdriver/testing'),
+const
+  test                 = require('selenium-webdriver/testing'),
   By                     = require('selenium-webdriver').By,
   Promise                = require("bluebird"),
+  moment                 = require('moment'),
   expect                 = require('chai').expect,
   register_new_user_func = require('../../lib/register_new_user'),
   open_page_func         = require('../../lib/open_page'),
   submit_form_func       = require('../../lib/submit_form'),
   check_elements_func    = require('../../lib/check_elements'),
   config                 = require('../../lib/config'),
+  user_info_func         = require('../../lib/user_info'),
   application_host       = config.get_application_host(),
-  schedule_form_id       = '#company_schedule_form';
+  schedule_form_id       = '#company_schedule_form',
+  userStartsAtTheBeginingOfYear = require('../../lib/set_user_to_start_at_the_beginning_of_the_year');
 
 /*
  *  Scenario 1:
@@ -209,7 +213,7 @@ describe('Leave request reflects shanges in company schedule', function(){
 
   this.timeout( config.get_execution_timeout() );
 
-  var driver;
+  let driver, email_A;
 
   it("Register new company", function(done){
     register_new_user_func({
@@ -217,8 +221,20 @@ describe('Leave request reflects shanges in company schedule', function(){
     })
     .then(function(data){
       driver = data.driver;
+      email_A = data.email;
       done();
     });
+  });
+
+  it("Obtain information about newly added user", (done) => {
+    user_info_func({driver, email:email_A})
+    .then(data => done());
+  });
+
+  it("Ensure user starts at the very beginning of current year", done =>{
+    userStartsAtTheBeginingOfYear({driver, email:email_A})
+      .then(() => open_page_func({driver, url:application_host}))
+      .then(() => done())
   });
 
   it("Open Book leave popup window", function(done){

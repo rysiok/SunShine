@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Setup authentication mechanism
-var passport = require('./lib/passport')();
+const passport = require('./lib/passport')();
 
 var session = require('express-session');
 // initalize sequelize with session store
@@ -103,6 +103,11 @@ app.use(
 );
 
 app.use(
+  '/integration/v1/',
+  require('./lib/route/integration_api')(passport)
+);
+
+app.use(
   '/',
   require('./lib/route/login')(passport),
 
@@ -146,11 +151,9 @@ app.use(
   require('./lib/route/reports')
 );
 
-// catch 404 and forward to error handler
+// catch 404
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  res.render('not_found');
 });
 
 

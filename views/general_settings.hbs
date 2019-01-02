@@ -32,7 +32,7 @@
                 <div class="col-md-8">
                   <select class="form-control" id="input_country" name="country">
                     {{#each countries}}
-                    <option value="{{@key}}" {{# if_equal @key ../company.country }} selected="selected"{{/if_equal}}>{{this.name}}</option>
+                    <option value="{{@key}}" {{# if_equal @key ../company.country }} selected="selected"{{/if_equal}}>{{@key}}: {{this.name}}</option>
                     {{/each}}
                   </select>
                 </div>
@@ -64,6 +64,21 @@
 
 
               <div class="form-group">
+                <label for="input_carry_over" class="col-md-4 control-label">Carried over days</label>
+                <div class="col-md-8">
+                  <select class="form-control" id="input_carry_over" name="carry_over">
+                    {{#each carryOverOptions}}
+                    <option value="{{this.days}}" {{# if_equal this.days ../company.carry_over }} selected="selected"{{/if_equal}}>{{this.label}}</option>
+                    {{/each}}
+                  </select>
+                    <p>
+                      <em>Number of days in employee allowance that are carried over to the next year.</em>
+                    </p>
+                </div>
+              </div>
+
+
+              <div class="form-group">
                 <div class="col-md-offset-4 col-md-8">
                   <div class="checkbox">
                     <label for="share-all-absences">
@@ -84,22 +99,22 @@
           </div>
 
           <div class="col-md-offset-1 col-md-5">
-            <form class="form-horizontal" method="POST" action="/settings/company/export/" id="company_export_form">
+
+            <div class="form-horizontal">
               <div class="form-group">
-                <label for="export_company_btn" class="col-md-6 control-label">Export company data</label>
-                <div class="col-md-6">
-                  <button type="submit" id="export_company_btn" class="btn btn-success">Download</button>
-                </div>
+                <label for="" class="col-md-7 control-label">Backup employees' leaves data</label>
               </div>
               <div class="form-group">
                 <div class="col-md-offset-2">
-                  <em>Download company dump file that could be used to restore account on another TimeOff.Management installation.</em>
+                  <em>Download list of employees with their leave requests ever. The file is in <strong>.CSV</strong> format which is compatible with MS Excel.</em>
                 </div>
               </div>
-            </form>
-
-
-            <div class="form-group">&nbsp;</div>
+              <div class="form-group">
+                <div class="col-md-offset-2 col-md-11">
+                  <a class="btn btn-success pull-right" href="/settings/company/backup/"><i class="fa fa-download"></i> Download backup</a>
+                </div>
+              </div>
+            </div>
 
             <form class="form-horizontal" method="POST" action="/settings/schedule" id="company_schedule_form">
             <input type="hidden" name="company_wide" value="1">
@@ -123,7 +138,6 @@
             </div>
             </form>
 
-
           </div>
         </div>
       </div>
@@ -140,11 +154,12 @@
       </div>
       <div class="panel-body">
         <form id="delete_bankholiday_form" method="post" action="/settings/bankholidays/delete/"></form>
+        <form id="import_bankholiday_form" method="post" action="/settings/bankholidays/import/"></form>
         <form id="update_bankholiday_form" method="post" action="/settings/bankholidays/">
 
         <div class="row">
+          <div class="col-md-4"><label class="control-label">Date</label></div>
           <div class="col-md-6"><label class="control-label">Holiday Name</label></div>
-          <div class="col-md-3"><label class="control-label">Date</label></div>
         </div>
 
         <div class="row">&nbsp;</div>
@@ -158,15 +173,15 @@
         {{#each company.bank_holidays}}
         <div class="row">
 
-          <div class="col-md-6">
-              <input type="text" class="form-control" value="{{name}}" name="name__{{@index}}">
-          </div>
-
           <div class="col-md-4">
             <div class="input-append date">
             <input type="text" class="form-control" value="{{as_date date}}" name="date__{{@index}}" data-date-autoclose="1" data-provide="datepicker" data-date-format="{{#with ../logged_user.company}}{{this.get_default_date_format_for_date_picker}}{{/with}}" data-date-week-start="1">
             <span class="add-on"><i class="icon-th"></i></span>
             </div>
+          </div>
+
+          <div class="col-md-6">
+              <input type="text" class="form-control" value="{{name}}" name="name__{{@index}}">
           </div>
 
           <div class="col-md-2">
@@ -183,8 +198,9 @@
         <div class="row">
           <div class="col-md-12">
             <div class="pull-right">
+              <button id="bankholiday-import-btn" class="btn btn-default" type="button">Import default holidays</button>
               <button class="btn btn-default" type="button" data-toggle="modal" data-target="#add_new_bank_holiday_modal" id="add_new_bank_holiday_btn">Add new</button>
-              <button type="submit" class="btn btn-success pull-right-">Save changes</button>
+              <button type="submit" class="btn btn-success">Save changes</button>
             </div>
           </div>
         </div>
@@ -287,6 +303,42 @@
 </div>
 
 
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-danger">
+      <div class="panel-heading">
+        <i class="fa fa-bomb"></i> Danger zone
+      </div>
+      <div class="panel-body">
+
+          <div class="col-md-12">
+
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="" class="control-label">Remove company account</label>
+              </div>
+              <div class="form-group">
+                <div class="col-md-6">
+                  <p><em>Completely erase data associated with {{company.name}}'s account.</em></p>
+                  <p><em> This is irreversible action.</em></p>
+                  <p><em> It is strongly recommended to <a href="/settings/company/backup/">download</a> employees leave data first.</em></p>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-danger pull-right" data-toggle="modal" data-target="#remove_company_modal" type="button"><i class="fa fa-remove"></i> Delete company account</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {{> add_new_bank_holiday_modal
   container_id='add_new_bank_holiday_modal'
   form_action='/settings/bankholidays/'
@@ -296,6 +348,11 @@
 {{> add_new_leave_type_modal
   container_id='add_new_leave_type_modal'
   form_action='/settings/leavetypes/'
+}}
+
+{{> remove_company_modal
+  container_id='remove_company_modal'
+  
 }}
 
 {{> footer }}

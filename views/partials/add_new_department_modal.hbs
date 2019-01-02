@@ -8,13 +8,6 @@
         <h4 class="modal-title">Add new Department</h4>
       </div>
 
-      {{#each departments}}
-        <input type="hidden" value="{{name}}" name="name__{{@index}}">
-        <input type="hidden" value="{{this.allowance}}" name="allowance__{{@index}}">
-        <input type="hidden" name="include_public_holidays__{{@index}}" value="{{include_public_holidays}}">
-        <input type="hidden" name="boss_id__{{@index}}" value="{{this.bossId}}">
-      {{/each}}
-
       <div class="modal-body">
 
         <div class="form-group">
@@ -34,6 +27,11 @@
         <div class="form-group">
           <input type="checkbox" id="department_include_public_holiday_new" name="include_public_holidays__new" checked="checked">&nbsp;
           <label for="department_include_public_holiday_new" class="control-label">Include Public Holidays?</label>
+        </div>
+
+        <div class="form-group">
+          <input type="checkbox" id="department_is_accrued_allowance_new" name="is_accrued_allowance__new">&nbsp;
+          <label for="department_is_accrued_allowance_new" class="control-label">Accrued Allowance?</label>
         </div>
 
         <div class="form-group">
