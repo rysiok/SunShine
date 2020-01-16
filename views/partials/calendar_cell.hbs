@@ -20,12 +20,13 @@
           data-toggle="tooltip"
           data-placement="top"
           title="
-            {{#if ../../day.is_current_day}}Today{{/if}}
-            {{#if this.is_new_leave}}New absence waiting approval{{/if}}
-            {{#if this.is_pended_revoke_leave}}Revoked waiting for approval{{/if}}
-            {{#if this.is_approved_leave}}
-              {{#unless this.is_pended_revoke_leave}}Approved absence{{/unless}}
-            {{/if}}"
+            {{~#if ../day.leaveLabel ~}}{{~../day.leaveLabel~}}: {{/if~}}
+            {{~#if ../../day.is_current_day}}Today{{/if~}}
+            {{~#if this.is_new_leave}}New absence waiting approval{{/if~}}
+            {{~#if this.is_pended_revoke_leave}}Revoked waiting for approval{{/if~}}
+            {{~#if this.is_approved_leave~}}
+              {{~#unless this.is_pended_revoke_leave}}Approved absence{{/unless~}}
+            {{~/if}}"
         {{/if}}
       {{/with}}
     {{/unless}}
@@ -40,7 +41,7 @@
   {{#if day.is_bank_holiday}}
     data-toggle="tooltip"
     data-placement="top"
-    title="Bank holiday"
+    title="Bank holiday: {{day.bank_holiday_name}}"
   {{/if}}
 
 >{{day.val}}</span>

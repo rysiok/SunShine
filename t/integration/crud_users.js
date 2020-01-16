@@ -12,7 +12,8 @@ var test                 = require('selenium-webdriver/testing'),
   submit_form_func       = require('../lib/submit_form'),
   add_new_user_func      = require('../lib/add_new_user'),
   config                 = require('../lib/config'),
-  application_host       = config.get_application_host();
+  application_host       = config.get_application_host(),
+  department_edit_form_id = '#department_edit_form';
 
 /*
  *  Scenario to check:
@@ -92,7 +93,7 @@ describe('CRUD for users', function(){
 
   it("Open department management page", function(done){
     open_page_func({
-      url    : application_host + 'settings/departments-bulk-update/',
+      url    : application_host + 'settings/departments/',
       driver : driver,
     })
     .then(function(){ done() });
@@ -133,26 +134,33 @@ describe('CRUD for users', function(){
   });
 
   it("And update its boss to be MANAGER", function(done){
-     submit_form_func({
-      driver      : driver,
-      form_params : [{
-        selector : '#add_new_department_btn',
-        tick     : true,
-      },{
-        selector : 'input[name="name__0"]',
-        // Just to make sure it is always first in the lists
-        value : 'AAAAA',
-      },{
-        selector        : 'select[name="allowance__0"]',
-        option_selector : 'option[value="15"]',
-        value : '15',
-      },{
-        selector        : 'select[name="boss_id__0"]',
-        option_selector : 'select[name="boss_id__0"] option:nth-child(3)',
-      }],
-      message : /Changes to departments were saved/,
+    open_page_func({
+      url    : application_host + 'settings/departments/',
+      driver : driver,
     })
-    .then(function(){ done() });
+    .then(() => driver
+      .findElements(By.css('a[href*="/settings/departments/edit/"]'))
+      .then(links => links[0].click())
+    )
+    .then(() => submit_form_func({
+        driver      : driver,
+        form_params : [{
+          selector : 'input[name="name"]',
+          // Just to make sure it is always first in the lists
+          value : 'AAAAA',
+        },{
+          selector        : 'select[name="allowance"]',
+          option_selector : 'option[value="15"]',
+          value : '15',
+        },{
+          selector        : 'select[name="boss_id"]',
+          option_selector : 'select[name="boss_id"] option:nth-child(3)',
+        }],
+        submit_button_selector : department_edit_form_id+' button[type="submit"]',
+        message : /Department .* was updated/,
+      })
+    )
+    .then(() => done());
   });
 
   it("Open 'users' page", function(done){
@@ -185,6 +193,7 @@ describe('CRUD for users', function(){
       submit_button_selector : 'button#remove_btn',
       driver : driver,
       message : /Employee records were removed from the system/,
+      confirm_dialog : true,
     })
     .then(function(){ done() });
   });
@@ -211,6 +220,7 @@ describe('CRUD for users', function(){
       submit_button_selector : 'button#remove_btn',
       driver      : driver,
       message : /Cannot remove supervisor/,
+      confirm_dialog : true,
     })
     .then(function(){ done() });
   });
@@ -234,33 +244,39 @@ describe('CRUD for users', function(){
 
   it('Open departments', function(done){
     open_page_func({
-      url    : application_host + 'settings/departments-bulk-update/',
+      url    : application_host + 'settings/departments/',
       driver : driver,
     })
     .then(function(){ done() });
   });
 
   it('... and update the very first user is an supervisor', function(done){
-     submit_form_func({
+    open_page_func({
+      url    : application_host + 'settings/departments/',
+      driver : driver,
+    })
+    .then(() => driver
+      .findElements(By.css('a[href*="/settings/departments/edit/"]'))
+      .then(links => links[0].click())
+    )
+    .then(() => submit_form_func({
       driver      : driver,
       form_params : [{
-        selector : '#add_new_department_btn',
-        tick     : true,
-      },{
-        selector : 'input[name="name__0"]',
+        selector : 'input[name="name"]',
         // just to make sure it is always first in the lists
         value : 'aaaaa',
       },{
-        selector        : 'select[name="allowance__0"]',
+        selector        : 'select[name="allowance"]',
         option_selector : 'option[value="15"]',
         value : '15',
       },{
-        selector        : 'select[name="boss_id__0"]',
-        option_selector : 'select[name="boss_id__0"] option:nth-child(1)',
+        selector        : 'select[name="boss_id"]',
+        option_selector : 'select[name="boss_id"] option:nth-child(1)',
       }],
-      message : /changes to departments were saved/i,
-    })
-    .then(function(){ done() });
+        submit_button_selector : department_edit_form_id+' button[type="submit"]',
+        message : /Department .* was updated/,
+    }))
+    .then(() => done());
   });
 
   it("Open ex-MANAGER user details page", function(done){
@@ -276,6 +292,7 @@ describe('CRUD for users', function(){
       submit_button_selector : 'button#remove_btn',
       driver      : driver,
       message : /Employee records were removed from the system/,
+      confirm_dialog : true,
     })
     .then(function(){ done() });
   });
@@ -317,6 +334,7 @@ describe('CRUD for users', function(){
       submit_button_selector : 'button#remove_btn',
       driver      : driver,
       message : /Cannot remove administrator user/,
+      confirm_dialog : true,
     })
     .then(function(){ done() });
   });
@@ -352,6 +370,7 @@ describe('CRUD for users', function(){
       form_params : [{
           selector : 'input[name="adjustment"]',
           value    : '1.2',
+          change_step: true,
       }],
       submit_button_selector : 'button#save_changes_btn',
       message : /New allowance adjustment of user should be either whole integer number or with half/,
@@ -414,6 +433,7 @@ describe('CRUD for users', function(){
       submit_button_selector : 'button#remove_btn',
       driver      : driver,
       message : /Employee records were removed from the system/,
+      confirm_dialog : true,
     })
     .then(function(){ done() });
   });

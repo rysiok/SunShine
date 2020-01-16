@@ -18,7 +18,9 @@
       <ul class="nav navbar-nav navbar-left">
         {{# if logged_user }}
           <li><a href="/calendar/">Calendar</a></li>
-          <li class="hidden-xs"><a href="/calendar/teamview/">Team View</a></li>
+          {{# unless keep_team_view_hidden }}
+            <li><a href="/calendar/teamview/">Team View</a></li>
+          {{/ unless }}
           {{# if logged_user.admin }}
             <li class="hidden-xs"><a href="/users/">Employees</a></li>
           {{/if}}
@@ -39,7 +41,9 @@
                 <li><a href="/settings/general/">General</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="/settings/departments/">Departments</a></li>
+                <li><a href="/settings/bankholidays/">Bank Holidays</a></li>
                 <li><a href="/settings/company/authentication/">LDAP configuration</a></li>
+                <li><a href="/settings/company/integration-api/">API configuration</a></li>
                 <li><a href="/users/import/">Import employees</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="/audit/email/">Emails audit</a></li>

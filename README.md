@@ -3,8 +3,6 @@
 
 Web application for managing employee absences.
 
-[![Stories in Ready](https://badge.waffle.io/timeoff-management/application.png?label=ready&title=Ready)](https://waffle.io/timeoff-management/application)
-
 <a href="https://travis-ci.org/timeoff-management/application"><img align="right" src="https://travis-ci.org/timeoff-management/application.svg?branch=master" alt="Build status" /></a>
 
 ## Features
@@ -45,11 +43,9 @@ There are following types of users: employees, supervisors, and administrators.
 
 Optional LDAP authentication: configure application to use your LDAP server for user authentication.
 
-**Seamless data migration betweeen different installations**
+**Ability to extract leave data into CSV**
 
-User friendly and simple workflow for data migration between different TimeOff.Management installations.
-
-Admin user can download the entire company data as a single JSON file and then restore the account at a different installation by simply uploading the JSON.
+Ability to back up entire company leave data into CSV file. So it could be used in any spreadsheet applications.
 
 **Works on mobile phones**
 
@@ -102,10 +98,12 @@ We have quite a wide test coverage, to make sure that the main user paths work a
 
 Please run them frequently while developing the project.
 
-(make sure you have [PhantomJS](http://phantomjs.org/download.html) installed in path)
+Make sure you have Chrome driver installed in your path and Chrome browser for your platform.
+
+If you want to see the browser execute the interactions prefix with `SHOW_CHROME=1`
 
 ```bash
-npm test
+USE_CHROME=1 npm test
 ```
 
 (make sure that application with default settings is up and running)
@@ -123,6 +121,7 @@ npm install
 npm run-script db-update
 npm start
 ```
+
 
 ## Feedback
 

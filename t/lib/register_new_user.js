@@ -4,36 +4,30 @@
 
 'use strict';
 
-var webdriver = require('selenium-webdriver'),
-    By        = require('selenium-webdriver').By,
+var By        = require('selenium-webdriver').By,
     until     = require('selenium-webdriver').until,
     expect    = require('chai').expect,
     _         = require('underscore'),
     uuid      = require('node-uuid'),
     Promise   = require("bluebird"),
-    open_page_func       = require('../lib/open_page'),
+    open_page_func       = require('./open_page'),
+    build_driver         = require('./build_driver'),
     company_edit_form_id = '#company_edit_form',
-    submit_form_func     = require('../lib/submit_form');
+    submit_form_func     = require('./submit_form');
 
 
 var register_new_user_func = Promise.promisify( function(args, callback){
 
   var
-    application_host      = args.application_host,
+    application_host      = args.application_host || args.applicationHost,
     failing_error_message = args.failing_error_message,
     default_date_format   = args.default_date_format,
     random_token          = (new Date()).getTime(),
     new_user_email        = args.user_email || random_token + '@test.com';
 
-  var capabilities = process.env.USE_CHROME ? 'chrome' : 'phantomjs';
-
   // Instantiate new driver object if it not provided as paramater
-  var driver = args.driver || new webdriver.Builder()
-      .withCapabilities(webdriver.Capabilities[capabilities]())
-      .build();
+  var driver = args.driver || build_driver()
 
-//  driver.manage().timeouts().pageLoadTimeout(10*1000);
-//  driver.manage().timeouts().implicitlyWait(10*1000);
 
   // Make sure we are in desktop version
   driver.manage().window().setSize(1024, 768);
@@ -52,7 +46,6 @@ var register_new_user_func = Promise.promisify( function(args, callback){
       expect(text).to.match(/Register new company/i);
     });
 
-
   // Click on registration link
   driver
     .findElement(By.css('a[href="/register/"]'))
@@ -70,63 +63,33 @@ var register_new_user_func = Promise.promisify( function(args, callback){
     .then(function(ee){
       expect(ee).to.be.equal('New company');
     });
-  // TODO check title when it is implemented
-//  driver.getTitle()
-//    .then(function(title) {
-//      expect(title).to.be.equal('Please enter your details');
-//    });
 
-  // Fill in all text fields
-  Promise.all([
-    _.map(
-      [
-        {
-          selector : 'input[name="company_name"]',
-          value    : 'Company '+(new Date()).getTime(),
-        },
-        {
-          selector : 'input[name="name"]',
-          value    : 'name' + random_token,
-        },
-        {
-          selector : 'input[name="lastname"]',
-          value    : 'lastname' + random_token,
-        },
-        {
-          selector : 'input[name="email"]',
-          value    : new_user_email,
-        },
-        {
-          selector : 'input[name="password"]',
-          value    : '123456',
-        },
-        {
-          selector : 'input[name="password_confirmed"]',
-          value    : '123456',
-        },
-        {
-          selector        : 'select[name="country"]',
-          option_selector : 'option[value="IS"]',
-          value           : 'IS',
-        },
-      ],
-      function( test_case ){
-        driver
-          .findElement(By.css( test_case.selector ))
-          .then(function(el){
-            el.sendKeys( test_case.value );
-          });
-      })
-  ]);
-
-  // Submit registration form
-  driver
-    .findElement(
-      By.css('#submit_registration')
-    )
-    .then(function(el){
-      el.click();
-    });
+  driver.call(() => submit_form_func({
+    driver : driver,
+    form_params : [{
+      selector : 'input[name="company_name"]',
+      value    : 'Company '+(new Date()).getTime(),
+    },{
+      selector : 'input[name="name"]',
+      value    : 'name' + random_token,
+    },{
+      selector : 'input[name="lastname"]',
+      value    : 'lastname' + random_token,
+    },{
+      selector : 'input[name="email"]',
+      value    : new_user_email,
+    },{
+      selector : 'input[name="password"]',
+      value    : '123456',
+    },{
+      selector : 'input[name="password_confirmed"]',
+      value    : '123456',
+    },{
+      selector        : 'select[name="country"]',
+      option_selector : 'option[value="ZZ"]',
+    }],
+    submit_button_selector : '#submit_registration',
+  }));
 
   driver.wait(until.elementLocated(By.css('div')), 1000);
 

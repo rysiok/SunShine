@@ -5,6 +5,7 @@ var test                 = require('selenium-webdriver/testing'),
   By                     = require('selenium-webdriver').By,
   Promise                = require("bluebird"),
   expect                 = require('chai').expect,
+  moment                 = require('moment'),
   add_new_user_func      = require('../../lib/add_new_user'),
   check_elements_func    = require('../../lib/check_elements'),
   config                 = require('../../lib/config'),
@@ -15,7 +16,8 @@ var test                 = require('selenium-webdriver/testing'),
   submit_form_func       = require('../../lib/submit_form'),
   user_info_func         = require('../../lib/user_info'),
   application_host       = config.get_application_host(),
-  schedule_form_id       = '#company_schedule_form';
+  schedule_form_id       = '#company_schedule_form',
+  userStartsAtTheBeginingOfYear = require('../../lib/set_user_to_start_at_the_beginning_of_the_year');
 
 /*
  * Scenario 1: Basic user specific schedule
@@ -86,6 +88,11 @@ describe('Basic user specific schedule', function(){
       user_id_B = data.user.id;
       done();
     });
+  });
+
+  it("Ensure that user A started at the begining of current year", done =>{
+    userStartsAtTheBeginingOfYear({driver, email:email_A, year: 2015})
+      .then(() => done())
   });
 
   it('Open user B schedule and ensure wording indicates company wide one is used', function(done){

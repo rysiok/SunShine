@@ -1,27 +1,25 @@
 
-
 'use strict';
 
-var test             = require('selenium-webdriver/testing'),
+const
+  test             = require('selenium-webdriver/testing'),
     By               = require('selenium-webdriver').By,
-    expect           = require('chai').expect,
-    _                = require('underscore'),
-    Promise          = require("bluebird"),
-    moment           = require('moment'),
-    until            = require('selenium-webdriver').until,
-    login_user_func        = require('../../lib/login_with_user'),
-    register_new_user_func = require('../../lib/register_new_user'),
-    logout_user_func       = require('../../lib/logout_user'),
-    open_page_func         = require('../../lib/open_page'),
-    submit_form_func       = require('../../lib/submit_form'),
-    check_elements_func    = require('../../lib/check_elements'),
-    check_booking_func     = require('../../lib/check_booking_on_calendar'),
-    add_new_user_func      = require('../../lib/add_new_user'),
-    leave_type_edit_form_id='#leave_type_edit_form',
-    config                 = require('../../lib/config'),
-    application_host       = config.get_application_host();
+  expect           = require('chai').expect,
+  Promise          = require("bluebird"),
+  moment           = require('moment'),
+  until            = require('selenium-webdriver').until,
+  login_user_func        = require('../../lib/login_with_user'),
+  register_new_user_func = require('../../lib/register_new_user'),
+  logout_user_func       = require('../../lib/logout_user'),
+  open_page_func         = require('../../lib/open_page'),
+  submit_form_func       = require('../../lib/submit_form'),
+  check_booking_func     = require('../../lib/check_booking_on_calendar'),
+  add_new_user_func      = require('../../lib/add_new_user'),
+  leave_type_edit_form_id='#leave_type_edit_form',
+  config                 = require('../../lib/config'),
+  application_host       = config.get_application_host();
 
-var next_year = moment().add(1, 'y').format('YYYY');
+const next_year = moment().add(1, 'y').format('YYYY');
 
 /*
  *  Scenario to go in this test:
@@ -42,15 +40,12 @@ describe('Leave type limits for next year: ' + next_year, function(){
 
   this.timeout( config.get_execution_timeout() );
 
-  var admin_user_email, non_admin_user_email, driver;
+  let admin_user_email, non_admin_user_email, driver;
 
   it('Create new company', function(done){
-    register_new_user_func({
-      application_host : application_host,
-    })
-    .then(function(data){
-      driver = data.driver;
-      admin_user_email = data.email;
+    register_new_user_func({application_host})
+    .then(data =>{
+      ({driver,email:admin_user_email} = data);
       done();
     });
   });
@@ -58,14 +53,14 @@ describe('Leave type limits for next year: ' + next_year, function(){
   it("Open page with leave types", function(done){
     open_page_func({
       url    : application_host + 'settings/general/',
-      driver : driver,
+      driver,
     })
-    .then(function(){ done() });
+    .then(() => done());
   });
 
   it("Check that it is possible to update Limits", function(done){
     submit_form_func({
-      driver      : driver,
+      driver,
       form_params : [{
         selector : leave_type_edit_form_id+' input[data-tom-leave-type-order="limit_0"]',
         value    : '1',
@@ -74,26 +69,20 @@ describe('Leave type limits for next year: ' + next_year, function(){
       should_be_successful : true,
       message : /Changes to leave types were saved/,
     })
-    .then(function(){ done() });
+    .then(() => done());
   });
 
   it("Create new non-admin user", function(done){
-    add_new_user_func({
-      application_host : application_host,
-      driver           : driver,
-    })
-    .then(function(data){
+    add_new_user_func({ application_host, driver })
+    .then(data => {
       non_admin_user_email = data.new_user_email;
       done();
     });
   });
 
   it("Logout from admin account", function(done){
-    logout_user_func({
-      application_host : application_host,
-      driver           : driver,
-    })
-    .then(function(){ done() });
+    logout_user_func({application_host, driver})
+    .then(() => done());
   });
 
   it("Login as non-admin user", function(done){
@@ -126,10 +115,10 @@ describe('Leave type limits for next year: ' + next_year, function(){
           driver      : driver,
           form_params : [{
             selector : 'input#from',
-            value : next_year + '-05-10',
+            value : next_year + '-05-11',
           },{
             selector : 'input#to',
-            value : next_year + '-05-10',
+            value : next_year + '-05-11',
           }],
           message : /New leave request was added/,
         })
@@ -137,7 +126,7 @@ describe('Leave type limits for next year: ' + next_year, function(){
         .then(function(){
           check_booking_func({
             driver    : driver,
-            full_days : [moment(next_year + '-05-10')],
+            full_days : [moment(next_year + '-05-11')],
             type      : 'pended',
           })
           .then(function(){ done() });

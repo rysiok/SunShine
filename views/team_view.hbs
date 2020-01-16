@@ -13,15 +13,15 @@
 
 <nav>
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-xs-2">
       <a class="btn btn-link btn-lg" href="/calendar/teamview/?{{> team_view_url_parameters base_date = prev_date }}"><span aria-hidden="true" class="fa fa-chevron-left"></span> {{as_date_formatted prev_date 'MMM' }}</a>
     </div>
 
-    <div class="col-md-8 calendar-section-caption">
+    <div class="col-xs-8 calendar-section-caption">
         <button id="team_view_month_select_btn" class="btn btn-link btn-lg" data-tom="/calendar/teamview/?{{> team_view_url_parameters base_date=0 }}" data-provide="datepicker" data-date-format="yyyy-mm" data-date-autoclose="1" data-date-min-view-mode="months">{{as_date_formatted base_date 'MMMM, YYYY' }} <i class="fa fa-angle-down"></i></button>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-xs-2">
       <a class="btn btn-link btn-lg pull-right" href="/calendar/teamview/?{{> team_view_url_parameters base_date = next_date }}">{{as_date_formatted next_date 'MMM'}} <span aria-hidden="true" class="fa fa-chevron-right"></span></a>
     </div>
   </div>
@@ -33,6 +33,7 @@
   <div class="col-md-12">
     <table class="team-view-table table-hover">
 
+      <thead>
       <tr>
         <td class="team-view-header" colspan="2">
           <div class="dropdown pull-left">
@@ -54,10 +55,12 @@
         <td colspan="2" class="team-view-header"><b>{{as_date_formatted this.moment 'dd'}}</b></td>
       {{/each}}
       </tr>
+      </thead>
 
+      <tbody>
       {{# each users_and_leaves}}
         <tr class="teamview-user-list-row" data-vpp-user-list-row={{this.user.id}}>
-          <td class="left-column-cell cross-link">{{# if ../logged_user.admin}} {{#with this.user }}<a href="/users/edit/{{this.id}}/">{{ this.full_name }}</a>{{/with}}  {{else}}{{#with this.user }}<span>{{ this.full_name }}</span>{{/with}}{{/if}}</td>
+          <td class="left-column-cell cross-link user-details-summary-trigger" data-user-id={{this.user.id}}>{{# if ../logged_user.admin}} {{#with this.user }}<a href="/users/edit/{{this.id}}/">{{ this.full_name }}</a>{{/with}}  {{else}}{{#with this.user }}<span>{{ this.full_name }}</span>{{/with}}{{/if}}</td>
           <td>
             <span class="teamview-deducted-days"
               {{# if statistics }}
@@ -75,6 +78,7 @@
           {{/each}}
         </tr>
       {{/each}}
+      </tbody>
     </table>
   </div>
 </div>
