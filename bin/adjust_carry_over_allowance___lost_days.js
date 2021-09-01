@@ -35,7 +35,7 @@ var currentYear = moment().format('YYYY'),
      *
      * */
 
-    var hashify_password = function( password ) {
+/*    var hashify_password = function( password ) {
       return crypto
         .createHash('md5')
         .update(password + config.get('crypto_secret'), (config.get('crypto_hash_encoding') || 'binary'))
@@ -44,7 +44,7 @@ var currentYear = moment().format('YYYY'),
 
     console.log(hashify_password('Qwerasdf')); return;//39ba17e711b2c28461de5977fb54d34e
 
-
+*/
 
 models.User
   .findAll()

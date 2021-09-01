@@ -4,7 +4,7 @@
   "private": false,
   "description": "Simple yet powerful absence management software for small and medium size business",
   "engines": {
-    "node": ">=10.16.0"
+    "node": ">=13.0.0"
   },
   "dependencies": {
     "bluebird": "^2.10.2",
@@ -17,7 +17,7 @@
     "express-handlebars": "^3.0.0",
     "express-session": "^1.13.0",
     "formidable": "~1.0.17",
-    "handlebars": "4.5.3",
+    "handlebars": "4.5.0",
     "html-to-text": "^3.2.0",
     "ical-generator": "^0.2.7",
     "joi": "~12.0.0",
@@ -51,8 +51,12 @@
   "scripts": {
     "test": "node node_modules/mocha/bin/mocha --recursive t",
     "start": "node bin/wwww",
-    "db-update": "node_modules\\.bin\\sequelize.cmd db:migrate --config=config/db.json --models-path=lib/model/db/",
+    "db-update": "node node_modules/.bin/sequelize db:migrate --config=config/db.json --models-path=lib/model/db/",
     "carry-over-allowance": "node bin/calculate_carry_over_allowance_for_all_users.js",
-    "compile-sass": "node node_modules/node-sass/bin/node-sass scss/main.scss public/css/style.css"
+    "compile-sass": "node node_modules/node-sass/bin/node-sass scss/main.scss public/css/style.css",
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
   }
 }
