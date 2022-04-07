@@ -10,6 +10,13 @@
         "rejectUnauthorized": false
     }
   },
+  "sessionStore": {
+    "useRedis": false,
+    "redisConnectionConfiguration": {
+      "host": "localhost",
+      "port": 6379
+    }
+  },
   "ga_analytics_on" : false,
   "crypto_secret" : "!2~`HswpPPLa33+=±§sdq qwe,Dppp q#wok$F_",
   "application_domain" : "https://sunshine.wolterskluwer.pl",
