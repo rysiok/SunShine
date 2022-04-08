@@ -25,7 +25,8 @@ RUN apk add --no-cache \
     git \
     nodejs npm \
     python3 \
-    make
+    make \
+    build-essential
     
 RUN adduser --system app --home /app
 USER app
