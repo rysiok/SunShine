@@ -23,10 +23,7 @@ LABEL org.label-schema.docker.cmd="docker run -d -p 3000:3000 --name alpine_time
 
 RUN apk add --no-cache \
     git \
-    make \
     nodejs npm \
-    python \
-    vim
     
 RUN adduser --system app --home /app
 USER app
