@@ -6,13 +6,13 @@
 # 1. Create an empty directory and copy this file into it.
 #
 # 2. Create image with: 
-#	docker build --tag timeoff:latest .
+#	docker build --tag sunshine:latest .
 #
 # 3. Run with: 
-#	docker run -d -p 3000:3000 --name alpine_timeoff timeoff
+#	docker run -d -p 3000:3000 --name sunshine sunshine
 #
 # 4. Login to running container (to update config (vi config/app.json): 
-#	docker exec -ti --user root alpine_timeoff /bin/sh
+#	docker exec -ti --user root sunshine /bin/sh
 # --------------------------------------------------------------------
 FROM node:14-alpine
 
