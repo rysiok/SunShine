@@ -29,15 +29,14 @@ RUN apk add --no-cache \
     python3 \
     vim
 
-ARG UNAME=app
-ARG UID=1000
-ARG GID=1000
+ARG ROOTDIR=/var/www
+ARG APPDIR=sunshine
+ARG GIT=https://github.com/rysiok/SunShine.git
 
-RUN adduser --system $UNAME --home /$UNAME --uid $UID --ingroup node
-USER $UNAME
-WORKDIR /$UNAME
-RUN git clone https://github.com/rysiok/SunShine.git timeoff-management
-WORKDIR /$UNAME/timeoff-management
+USER node
+WORKDIR /$ROOTDIR
+RUN git clone $GIT $APPDIR
+WORKDIR /$ROOTDIR/$APPDIR
 
 RUN npm install
 
