@@ -28,12 +28,17 @@ RUN apk add --no-cache \
     python2 \
     python3 \
     vim
-    
-RUN adduser --system app --home /app
-USER app
-WORKDIR /app
+
+ARG UNAME=app
+ARG UID=1000
+ARG GID=1000
+
+RUN groupadd -g $GID $UNAME
+RUN adduser --system $UNAME --home /$UNAME -u $UID -g $GID
+USER $UNAME
+WORKDIR /$UNAME
 RUN git clone https://github.com/rysiok/SunShine.git timeoff-management
-WORKDIR /app/timeoff-management
+WORKDIR /$UNAME/timeoff-management
 
 RUN npm install
 
