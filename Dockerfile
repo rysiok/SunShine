@@ -33,7 +33,7 @@ ARG UNAME=app
 ARG UID=1000
 ARG GID=1000
 
-RUN addgroup --gid $GID --system $UNAME
+#RUN addgroup --gid $GID --system $UNAME
 RUN adduser --system $UNAME --home /$UNAME --uid $UID --ingroup $UNAME
 USER $UNAME
 WORKDIR /$UNAME
