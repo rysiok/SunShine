@@ -33,8 +33,7 @@ ARG UNAME=app
 ARG UID=1000
 ARG GID=1000
 
-#RUN addgroup --gid $GID --system $UNAME
-RUN adduser --system $UNAME --home /$UNAME --uid $UID --ingroup $UNAME
+RUN adduser --system $UNAME --home /$UNAME --uid $UID --ingroup node
 USER $UNAME
 WORKDIR /$UNAME
 RUN git clone https://github.com/rysiok/SunShine.git timeoff-management
