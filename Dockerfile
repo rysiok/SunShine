@@ -29,7 +29,7 @@ RUN apk add --no-cache \
     python3 \
     vim
 
-ARG ROOTDIR=/var/www
+ARG ROOTDIR=/home/node
 ARG APPDIR=sunshine
 ARG GIT=https://github.com/rysiok/SunShine.git
 
