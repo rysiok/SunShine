@@ -24,6 +24,7 @@ LABEL org.label-schema.docker.cmd="docker run -d -p 3000:3000 --name sunshine"
 RUN apk add --no-cache \
     g++ \
     gcc \
+    git \
     libc-dev \
     make \
     sqlite \
