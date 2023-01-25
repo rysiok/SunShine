@@ -23,11 +23,11 @@ LABEL org.label-schema.docker.cmd="docker run -d -p 3000:3000 --name sunshine"
 
 RUN apk add --no-cache \
     g++ \
-    git \
+    gcc \
+    libc-dev \
     make \
-    python2 \
-    python3 \
-    vim
+    sqlite \
+    python3
 
 ARG ROOTDIR=/home/node
 ARG APPDIR=sunshine
