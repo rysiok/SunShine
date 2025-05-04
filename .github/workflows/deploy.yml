@@ -20,6 +20,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: '1.5.0' # You can change this version to the one you need
+
     - name: Login to Amazon ECR
       id: ecr
       uses: aws-actions/amazon-ecr-login@v1
@@ -32,9 +37,7 @@ jobs:
         tags: ${{ steps.ecr.outputs.registry }}/timeoff-app:latest
 
     - name: Run terraform init
-      working-directory: infra-terraform # Add this line to specify the correct path
-      run: |
-        terraform init
+      run: terraform init
 
     - name: Deploy to ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
