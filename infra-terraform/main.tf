@@ -7,7 +7,7 @@ provider "aws" {
 # Variable Declarations
 # --------------------------
 variable "region" {
-  default = "us-east-1"
+  default = "ap-south-1"
 }
 
 variable "db_password" {
