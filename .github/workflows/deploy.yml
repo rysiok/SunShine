@@ -36,16 +36,16 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform
+      working-directory: infra-terraform
 
     - name: Terraform Apply (auto-approve)
       run: terraform apply -auto-approve
-      working-directory: terraform
+      working-directory: infra-terraform
 
     - name: Get Task Definition ARN from Terraform Output
       id: tfoutput
       run: |
-        echo "task_def_arn=$(terraform -chdir=terraform output -raw task_definition_arn)" >> $GITHUB_OUTPUT
+        echo "task_def_arn=$(terraform -chdir=infra-terraform output -raw task_definition_arn)" >> $GITHUB_OUTPUT
 
     - name: Deploy to ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
