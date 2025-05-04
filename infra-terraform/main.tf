@@ -93,6 +93,10 @@ resource "aws_security_group" "ecs" {
 # --------------------------
 resource "aws_ecr_repository" "app" {
   name = "timeoff-app"
+
+  lifecycle {
+    ignore_changes = [repository_url]  # Prevent Terraform from trying to create the repository again
+  }
 }
 
 # --------------------------
@@ -104,6 +108,10 @@ resource "aws_lb" "app" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = module.vpc.public_subnets
+
+  lifecycle {
+    ignore_changes = [load_balancer_name]  # Prevent Terraform from trying to create the load balancer again
+  }
 }
 
 resource "aws_lb_target_group" "app" {
@@ -148,10 +156,17 @@ resource "aws_lb_listener" "https" {
 # --------------------------
 resource "aws_ecs_cluster" "main" {
   name = "timeoff-cluster"
+
+  
 }
+
 
 resource "aws_iam_role" "ecs_exec" {
   name = "ecs_exec_role"
+
+  lifecycle {
+    ignore_changes = [role_name]  # Prevent Terraform from trying to create the IAM role again
+  }
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -218,7 +233,12 @@ resource "aws_ecs_service" "app" {
 # Secrets Manager
 # --------------------------
 resource "aws_secretsmanager_secret" "db_password" {
-  name = "timeoff-db-password-new"
+  name = "timeoff-db-password-new1"
+
+  lifecycle {
+    ignore_changes = [secret_string]  # Prevent Terraform from trying to recreate the secret again
+  }
+
 }
 
 resource "aws_secretsmanager_secret_version" "db_password" {
