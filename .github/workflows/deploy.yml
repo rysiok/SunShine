@@ -23,7 +23,7 @@ jobs:
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: '1.5.0' # You can change this version to the one you need
+        terraform_version: '1.5.0'
 
     - name: Login to Amazon ECR
       id: ecr
@@ -39,10 +39,5 @@ jobs:
     - name: Run terraform init
       run: terraform init
 
-    - name: Deploy to ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: terraform/task-definition.json
-        service: timeoff-app
-        cluster: timeoff-cluster
-        wait-for-service-stability: true
+    - name: Run terraform apply
+      run: terraform apply -auto-approve
