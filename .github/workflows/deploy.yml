@@ -31,15 +31,38 @@ jobs:
         push: true
         tags: ${{ steps.ecr.outputs.registry }}/timeoff-app:latest
 
+<<<<<<< HEAD
     - name: Run terraform init
       working-directory: infra-terraform # Add this line to specify the correct path
       run: |
         terraform init
+=======
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: terraform
+
+    - name: Terraform Apply (auto-approve)
+      run: terraform apply -auto-approve
+      working-directory: terraform
+
+    - name: Get Task Definition ARN from Terraform Output
+      id: tfoutput
+      run: |
+        echo "task_def_arn=$(terraform -chdir=terraform output -raw task_definition_arn)" >> $GITHUB_OUTPUT
+>>>>>>> 90b96daaed47e1fb0a345490e9e5fa855be1dade
 
     - name: Deploy to ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
+<<<<<<< HEAD
         task-definition: terraform/task-definition.json
         service: timeoff-app
+=======
+        task-definition: ${{ steps.tfoutput.outputs.task_def_arn }}
+        service: timeoff-service
+>>>>>>> 90b96daaed47e1fb0a345490e9e5fa855be1dade
         cluster: timeoff-cluster
         wait-for-service-stability: true
