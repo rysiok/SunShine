@@ -1,4 +1,3 @@
-# terraform/main.tf
 provider "aws" {
   region = var.region
 }
@@ -16,7 +15,7 @@ variable "db_password" {
 }
 
 variable "domain_name" {
-  default = "timeoff.free.example.com"  # Test domain that should work
+  default = "timeoff.free.example.com"
 }
 
 # --------------------------
@@ -95,7 +94,7 @@ resource "aws_ecr_repository" "app" {
   name = "timeoff-app"
 
   lifecycle {
-    ignore_changes = [repository_url]  # Prevent Terraform from trying to create the repository again
+    prevent_destroy = true
   }
 }
 
@@ -110,7 +109,7 @@ resource "aws_lb" "app" {
   subnets            = module.vpc.public_subnets
 
   lifecycle {
-    ignore_changes = [load_balancer_name]  # Prevent Terraform from trying to create the load balancer again
+    prevent_destroy = true
   }
 }
 
@@ -123,6 +122,10 @@ resource "aws_lb_target_group" "app" {
 
   health_check {
     path = "/"
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
@@ -140,10 +143,11 @@ resource "aws_lb_listener" "http" {
     }
   }
 }
+
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.app.arn
-  port              = 3000  # Changed from 443 to match container port
-  protocol          = "HTTP"  # Changed from HTTPS for simplicity
+  port              = 3000
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
@@ -156,16 +160,13 @@ resource "aws_lb_listener" "https" {
 # --------------------------
 resource "aws_ecs_cluster" "main" {
   name = "timeoff-cluster"
-
-  
 }
-
 
 resource "aws_iam_role" "ecs_exec" {
   name = "ecs_exec_role"
 
   lifecycle {
-    ignore_changes = [role_name]  # Prevent Terraform from trying to create the IAM role again
+    prevent_destroy = true
   }
 
   assume_role_policy = jsonencode({
@@ -225,7 +226,6 @@ resource "aws_ecs_service" "app" {
     container_port   = 3000
   }
 
-  # Explicit dependency
   depends_on = [aws_lb_listener.https]
 }
 
@@ -236,9 +236,8 @@ resource "aws_secretsmanager_secret" "db_password" {
   name = "timeoff-db-password-new1"
 
   lifecycle {
-    ignore_changes = [secret_string]  # Prevent Terraform from trying to recreate the secret again
+    prevent_destroy = true
   }
-
 }
 
 resource "aws_secretsmanager_secret_version" "db_password" {
