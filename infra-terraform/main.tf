@@ -94,7 +94,7 @@ resource "aws_ecr_repository" "app" {
   name = "timeoff-app"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false  # Allow destroy of the ECR repository
   }
 }
 
@@ -109,7 +109,7 @@ resource "aws_lb" "app" {
   subnets            = module.vpc.public_subnets
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false  # Allow destroy of the Load Balancer
   }
 }
 
@@ -125,7 +125,7 @@ resource "aws_lb_target_group" "app" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false  # Allow destroy of the Target Group
   }
 }
 
@@ -166,7 +166,7 @@ resource "aws_iam_role" "ecs_exec" {
   name = "ecs_exec_role"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false  # Allow destroy of the ECS IAM role
   }
 
   assume_role_policy = jsonencode({
@@ -236,7 +236,7 @@ resource "aws_secretsmanager_secret" "db_password" {
   name = "timeoff-db-password-new1"
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false  # Allow destroy of the Secrets Manager secret
   }
 }
 
