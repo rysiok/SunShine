@@ -21,6 +21,130 @@ A comprehensive web application to manage employee absences, vacations, and leav
 
 ---
 
+TimeOff Management - Architecture Diagram
+___________________________________________________________________________________________
+
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                                   User Interface                                        |
+|                                   -----------------                                     |
+|                                                                                         |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|  |                     |     |                     |     |                     |        |
+|  |   Web Browser       |     |   Mobile Devices    |     |   Third-Party      |        |
+|  |   (Responsive UI)   |     |   (Responsive UI)   |     |   Calendars        |        |
+|  |                     |     |                     |     | (Google, Outlook)  |        |
+|  +----------+----------+     +----------+----------+     +----------+----------+        |
+|             |                           |                           |                   |
+|             |                           |                           |                   |
++-----------------------------------------------------------------------------------------+
+             |                           |                           |
+             v                           v                           v
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                                  Application Layer                                      |
+|                                  -----------------                                      |
+|                                                                                         |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|  |                     |     |                     |     |                     |        |
+|  |   Node.js Server    |     |   REST API          |     |   Email Service     |        |
+|  |   (Express.js)      +<----+   (Endpoints)       +----->   (Notifications)   |        |
+|  |                     |     |                     |     |                     |        |
+|  +----------+----------+     +---------------------+     +---------------------+        |
+|             |                                                                           |
+|             |                                                                           |
++-----------------------------------------------------------------------------------------+
+             |
+             v
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                                  Data Layer                                             |
+|                                  ----------                                             |
+|                                                                                         |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|  |                     |     |                     |     |                     |        |
+|  |   SQLite Database   |     |   CSV Exports       |     |   AWS RDS           |        |
+|  |   (Primary Storage) |     |   (Reports/Backup)  |     |   (Optional)        |        |
+|  |                     |     |                     |     |                     |        |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|                                                                                         |
++-----------------------------------------------------------------------------------------+
+
+___________________________________________________________________________________________
+
++-----------------------------------------------------------------------------------------+
+|                                                                                         |
+|                                  Infrastructure                                        |
+|                                  ---------------                                        |
+|                                                                                         |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|  |                     |     |                     |     |                     |        |
+|  |   AWS ECS          |     |   AWS VPC           |     |   CI/CD Pipeline    |        |
+|  |   (Docker Containers|<----+   (Networking)      +----->   (GitHub Actions   |        |
+|  |                     |     |                     |     |    + Terraform)     |        |
+|  +---------------------+     +---------------------+     +---------------------+        |
+|                                                                                         |
++-----------------------------------------------------------------------------------------+
+
+
+Key Components:
+
+User Interface Layer:
+
+Web browser (responsive design)
+
+Mobile devices (responsive design)
+
+Third-party calendar integrations (Google, Outlook)
+
+Application Layer:
+
+Node.js server with Express.js
+
+REST API endpoints
+
+Email notification service
+
+Data Layer:
+
+SQLite database (primary storage)
+
+CSV export functionality
+
+Optional AWS RDS for production
+
+Infrastructure Layer:
+
+AWS ECS with Docker containers
+
+AWS VPC for networking
+
+CI/CD pipeline (GitHub Actions + Terraform)
+
+Key Flows:
+
+Users interact via web/mobile interfaces
+
+Application processes requests via Node.js server
+
+Data is stored in SQLite (or RDS in production)
+
+Notifications sent via email service
+
+CI/CD pipeline handles automated deployments
+
+The architecture shows:
+
+Horizontal layers of responsibility
+
+Key integration points (third-party calendars, email)
+
+Deployment infrastructure
+
+Data storage options
+
+CI/CD automation
+
 ## Installation
 
 ### Prerequisites
