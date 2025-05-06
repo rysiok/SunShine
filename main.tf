@@ -1,13 +1,9 @@
-# terraform/main.tf
 provider "aws" {
   region = var.region
 }
 
-# --------------------------
-# Variable Declarations
-# --------------------------
 variable "region" {
-  default = "us-east-1"
+  default = "ap-south-1"
 }
 
 variable "db_password" {
@@ -16,16 +12,13 @@ variable "db_password" {
 }
 
 variable "domain_name" {
-  default = "timeoff.free.example.com"  # Test domain that should work
+  default = "timeoff.free.example.com"
 }
 
-# --------------------------
-# VPC & Networking
-# --------------------------
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.0.0"
-  
+
   name = "timeoff-vpc"
   cidr = "10.0.0.0/16"
 
@@ -38,9 +31,6 @@ module "vpc" {
   enable_dns_hostnames = true
 }
 
-# --------------------------
-# Security Groups
-# --------------------------
 resource "aws_security_group" "alb" {
   name        = "timeoff-alb-sg"
   description = "ALB security group"
@@ -88,22 +78,24 @@ resource "aws_security_group" "ecs" {
   }
 }
 
-# --------------------------
-# ECR Repository
-# --------------------------
 resource "aws_ecr_repository" "app" {
   name = "timeoff-app"
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
-# --------------------------
-# ALB Configuration
-# --------------------------
 resource "aws_lb" "app" {
   name               = "timeoff-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
   subnets            = module.vpc.public_subnets
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 resource "aws_lb_target_group" "app" {
@@ -115,6 +107,10 @@ resource "aws_lb_target_group" "app" {
 
   health_check {
     path = "/"
+  }
+
+  lifecycle {
+    prevent_destroy = false
   }
 }
 
@@ -132,10 +128,11 @@ resource "aws_lb_listener" "http" {
     }
   }
 }
+
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.app.arn
-  port              = 3000  # Changed from 443 to match container port
-  protocol          = "HTTP"  # Changed from HTTPS for simplicity
+  port              = 3000
+  protocol          = "HTTP"
 
   default_action {
     type             = "forward"
@@ -143,15 +140,16 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-# --------------------------
-# ECS Resources
-# --------------------------
 resource "aws_ecs_cluster" "main" {
   name = "timeoff-cluster"
 }
 
 resource "aws_iam_role" "ecs_exec" {
   name = "ecs_exec_role"
+
+  lifecycle {
+    prevent_destroy = false
+  }
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -210,15 +208,15 @@ resource "aws_ecs_service" "app" {
     container_port   = 3000
   }
 
-  # Explicit dependency
   depends_on = [aws_lb_listener.https]
 }
 
-# --------------------------
-# Secrets Manager
-# --------------------------
 resource "aws_secretsmanager_secret" "db_password" {
-  name = "timeoff-db-password"
+  name = "timeoff-db-password-new2"
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "db_password" {
@@ -226,9 +224,6 @@ resource "aws_secretsmanager_secret_version" "db_password" {
   secret_string = var.db_password
 }
 
-# --------------------------
-# Outputs
-# --------------------------
 output "alb_dns" {
   value = aws_lb.app.dns_name
 }
@@ -239,4 +234,8 @@ output "ecr_repo_url" {
 
 output "app_url" {
   value = "http://${aws_lb.app.dns_name}"
+}
+
+output "task_definition_arn" {
+  value = aws_ecs_task_definition.app.arn
 }
