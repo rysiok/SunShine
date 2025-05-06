@@ -233,7 +233,7 @@ resource "aws_ecs_service" "app" {
 # Secrets Manager
 # --------------------------
 resource "aws_secretsmanager_secret" "db_password" {
-  name = "timeoff-db-password-new1"
+  name = "timeoff-db-password-new2"
 
   lifecycle {
     prevent_destroy = false  # Allow destroy of the Secrets Manager secret
