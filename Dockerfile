@@ -19,7 +19,8 @@
 #Second stage sets up the app environment
 #Final container runs the app on port 3000
 # --------------------------------------------------------------------
-FROM node:14-alpine AS dependencies       #You're assigning a name (dependencies) to this build stage so you can refer to it later.
+#You're assigning a name (dependencies) to this build stage so you can refer to it later.
+FROM node:14-alpine AS dependencies       
 RUN apk add --no-cache \                  #Installs nodejs and npm using Alpine’s package manager apk
     nodejs npm                            #--no-cache avoids storing cache and keeps the image small.
 
