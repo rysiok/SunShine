@@ -13,14 +13,12 @@
 #
 # 4. Login to running container (to update config (vi config/app.json): 
 #	docker exec -ti --user root alpine_timeoff /bin/sh
-# --------------------------------------------------------------------
-
+#--------------------------------------------------------------------
 #It builds a multi-stage Docker image using Node.js on Alpine Linux
 #First stage installs dependencies
 #Second stage sets up the app environment
 #Final container runs the app on port 3000
-
-
+# --------------------------------------------------------------------
 FROM node:14-alpine AS dependencies       #You're assigning a name (dependencies) to this build stage so you can refer to it later.
 RUN apk add --no-cache \                  #Installs nodejs and npm using Alpine’s package manager apk
     nodejs npm                            #--no-cache avoids storing cache and keeps the image small.
