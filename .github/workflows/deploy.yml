@@ -3,10 +3,10 @@ name: Deploy to AWS ECS
 on:
   push:
     branches:
-      - main  # This will trigger the workflow when changes are pushed to the `main` branch
+      - master  # This will trigger the workflow when changes are pushed to the `main` branch
   pull_request:
     branches:
-      - main  # This will trigger the workflow when a pull request is created to the `main` branch
+      - master  # This will trigger the workflow when a pull request is created to the `main` branch
   workflow_dispatch:
 
 jobs:
