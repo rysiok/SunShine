@@ -21,8 +21,8 @@
 # --------------------------------------------------------------------
 #You're assigning a name (dependencies) to this build stage so you can refer to it later.
 FROM node:14-alpine AS dependencies       
-RUN apk add --no-cache \                 
-    nodejs npm                            #Installs nodejs and npm using Alpine’s package manager apk and #--no-cache avoids storing cache and keeps the image small.
+RUN apk add --no-cache \                  #Installs nodejs and npm using Alpine’s package manager apk
+    nodejs npm                            #--no-cache avoids storing cache and keeps the image small.
 
 COPY package.json  .
 RUN npm install 
