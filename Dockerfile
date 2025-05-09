@@ -41,4 +41,4 @@ WORKDIR /$ROOTDIR/$APPDIR
 
 RUN npm install
 
-CMD npm start
+CMD ["npm", "start"]
