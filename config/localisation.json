@@ -120,8 +120,8 @@
       "name": "Other",
       "bank_holidays": [
         {
-          "name" : "Early May bank holiday",
-          "date" : "2015-05-04"
+          "name": "Early May bank holiday",
+          "date": "2015-05-04"
         }
       ]
     }
