@@ -56,7 +56,7 @@ jobs:
         uses: eltimn/slugify-action@v2.0.2
 
       - name: "echo image name"
-        run: echo "::error ${{ steps.build.metadata.image.name }}"
+        run: echo "::error ${{ steps.build.outputs.metadata.image.name }}"
 
       - name: "echo image name"
         run: echo "::warning ${{ env.IMAGE_NAME }}"
