@@ -43,6 +43,7 @@ jobs:
 #        run: docker build -t sunshine .
       - name: Build and push Docker image
 #        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -55,6 +56,8 @@ jobs:
         id: slugify
         uses: eltimn/slugify-action@v2.0.2
 
+      - name: "echo image name"
+        run: echo ${{ build.meta.image.name }}
 
 
       - name: Run Snyk to check Docker image for vulnerabilities
