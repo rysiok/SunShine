@@ -58,6 +58,8 @@ jobs:
       - name: "echo image name"
         run: echo "::error ${{ steps.build.metadata.image.name }}"
 
+      - name: "echo image name"
+        run: echo "::warning ${{ env.IMAGE_NAME }}"
 
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
@@ -70,8 +72,9 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{steps.slugify.outputs.sha}}
-          args: --file=Dockerfile --sarif-file-output=snyk.sarif
+          #image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{steps.slugify.outputs.sha}}
+          image: ${{ env.IMAGE_NAME }}
+          args: --file=Dockerfile
 
       - name: Replace security-severity undefined for license-related findings
         run: |
