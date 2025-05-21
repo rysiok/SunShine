@@ -49,8 +49,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-#      - name: "echo image name"
-#        run: dockeer pull ${{ DOCKER_METADATA_OUTPUT_TAGS }}
+      - name: "Pull docker image for Synk"
+        run: dockeer pull ${{ DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
