@@ -14,7 +14,7 @@
 # 4. Login to running container (to update config (vi config/app.json): 
 #	docker exec -ti --user root sunshine /bin/sh
 # --------------------------------------------------------------------
-FROM node:14-alpine
+FROM node:22-alpine
 
 EXPOSE 3000
 
