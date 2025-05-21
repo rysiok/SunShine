@@ -37,8 +37,6 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      #  - name: Build the Docker image
-      #    run: docker build . --file Dockerfile --tag sunshine:$(date +%s)
 #      - name: Build a Docker image
 #        run: docker build -t sunshine .
       - name: Build and push Docker image
@@ -51,15 +49,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-      - name: "Run slugify"
-        id: slugify
-        uses: eltimn/slugify-action@v2.0.2
-
-      - name: "echo image name"
-        run: echo "::error ${{ steps.build.outputs.metadata.image.name }}"
-
-      - name: "echo image name"
-        run: echo "::warning ${{ env.IMAGE_NAME }}"
+#      - name: "echo image name"
+#        run: dockeer pull ${{ DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
@@ -73,7 +64,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           #image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{steps.slugify.outputs.sha}}
-          image: ${{ env.IMAGE_NAME }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           args: --file=Dockerfile
 
       - name: Replace security-severity undefined for license-related findings
