@@ -8,13 +8,16 @@
 # 2. Create image with: 
 #	docker build --tag sunshine:latest .
 #
-# 3. Run with: 
+# 3. Update the database with:
+# docker exec -ti --user root sunshine npm run-script db-update
+#
+# 4. Run with:
 #	docker run -d -p 3000:3000 --name sunshine sunshine
 #
-# 4. Login to running container (to update config (vi config/app.json): 
+# 5. Login to running container (to update config (vi config/app.json):
 #	docker exec -ti --user root sunshine /bin/sh
 # --------------------------------------------------------------------
-FROM node:22-alpine
+FROM node:14-alpine
 
 EXPOSE 3000
 
@@ -40,5 +43,4 @@ RUN git clone $GIT $APPDIR
 WORKDIR /$ROOTDIR/$APPDIR
 
 RUN npm install
-RUN npm run-script db-update
 CMD ["npm", "start"]

@@ -30,6 +30,8 @@
     "node-uuid": "^1.4.7",
     "nodemailer": "^1.11.0",
     "nodemailer-smtp-transport": "^1.1.0",
+    "npm-force-resolutions": "0.0.10",
+    "npx": "^10.2.2",
     "optimist": "^0.6.1",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
