@@ -45,6 +45,7 @@ describe('CRUD for users', function(){
   var email_admin   , admin_user_id,
       email_manager , manager_user_id,
       email_employee, employee_user_id,
+      email_auto_approve_user, auto_approve_user_id, // For the new test case
       driver;
 
   it('Create new company', function(done){
@@ -53,6 +54,19 @@ describe('CRUD for users', function(){
     })
     .then(function(data){
       driver = data.driver;
+      done();
+    });
+  });
+
+  it("Create AUTO-APPROVE-to-be user", function(done){
+    add_new_user_func({
+      application_host : application_host,
+      driver           : driver,
+      // Make this user distinct
+      user_name : 'AutoApproveUser',
+    })
+    .then(function(data){
+      email_auto_approve_user = data.new_user_email;
       done();
     });
   });
@@ -126,7 +140,16 @@ describe('CRUD for users', function(){
     })
     .then(function(value){
       employee_user_id = value;
-      [manager_user_id, admin_user_id, employee_user_id].forEach(
+      return driver.findElement(
+        By.css('select[name="boss_id__new"] option:nth-child(5)') // Adding new user means index increases
+      );
+    })
+    .then(function(el){
+      return el.getAttribute('value');
+    })
+    .then(function(value){
+      auto_approve_user_id = value;
+      [manager_user_id, admin_user_id, employee_user_id, auto_approve_user_id].forEach(
         function(id){ expect( id ).to.match(/^\d+$/); }
       );
       done();
@@ -171,11 +194,11 @@ describe('CRUD for users', function(){
     .then(function(){ done() });
   });
 
-  it('Check that system has 4 users (one currently logged in and 3 added)', function(done){
+  it('Check that system has 5 users (one currently logged in and 4 added)', function(done){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
-        expect(elements.length).to.be.equal(4);
+        expect(elements.length).to.be.equal(5);
         done();
       });
   });
@@ -198,11 +221,11 @@ describe('CRUD for users', function(){
     .then(function(){ done() });
   });
 
-  it("Check that system has 3 users (one currently logged in and 2 added)", function(done){
+  it("Check that system has 4 users (one currently logged in and 3 added)", function(done){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
-        expect(elements.length).to.be.equal(3);
+        expect(elements.length).to.be.equal(4);
         done();
       });
   });
@@ -233,11 +256,11 @@ describe('CRUD for users', function(){
     .then(function(){done() });
   });
 
-  it('Check that system still has 3 users (one currently logged in and 2 added)', function(done){
+  it('Check that system still has 4 users (one currently logged in and 3 added)', function(done){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
-        expect(elements.length).to.be.equal(3);
+        expect(elements.length).to.be.equal(4);
         done();
       });
   });
@@ -301,8 +324,8 @@ describe('CRUD for users', function(){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
-        // 1 that registered company and other is ADMIN
-        expect(elements.length).to.be.equal(2);
+        // 1 that registered company, ADMIN and AUTO_APPROVE_USER
+        expect(elements.length).to.be.equal(3);
         done();
       });
   });
@@ -351,6 +374,7 @@ describe('CRUD for users', function(){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
+        // AUTO_APPROVE_USER is still there
         expect(elements.length).to.be.equal(2);
         done();
       });
@@ -442,10 +466,80 @@ describe('CRUD for users', function(){
     driver
       .findElements(By.css( 'td.user_department' ))
       .then(function(elements){
-        expect(elements.length).to.be.equal(1);
+        // This should be 2, as AUTO_APPROVE_USER is still there
+        expect(elements.length).to.be.equal(2);
         done();
       });
   });
+
+  // Series of tests for auto_approve preservation
+  it("Open AUTO-APPROVE user details page", function(done){
+    open_page_func({
+      url    : application_host + 'users/edit/'+auto_approve_user_id+'/',
+      driver : driver,
+    })
+    .then(function(){ done() });
+  });
+
+  it('Set its auto_approve to true', function(done){
+    submit_form_func({
+      driver      : driver,
+      form_params : [{
+        selector : 'input[name="auto_approve"]',
+        tick     : true,
+        value    : 'on',
+      }],
+      submit_button_selector : 'button#save_changes_btn',
+      message : /Details for .+ were updated/,
+    })
+    .then(function(){ done() });
+  });
+
+  it('Verify auto_approve is true after setting', function(done){
+    open_page_func({ // Re-open page to ensure value is saved and re-loaded
+      url    : application_host + 'users/edit/'+auto_approve_user_id+'/',
+      driver : driver,
+    })
+    .then(() => driver.findElement(By.css('input[name="auto_approve"]')))
+    .then(checkbox => checkbox.isSelected())
+    .then(is_selected => {
+      expect(is_selected).to.be.true;
+      done();
+    });
+  });
+
+  it('Edit user lastname, keeping auto_approve untouched in form submission', function(done){
+    submit_form_func({
+      driver      : driver,
+      form_params : [{
+        selector : 'input[name="lastname"]',
+        value    : 'AutoApproveTestLastName',
+      }],
+      // IMPORTANT: auto_approve is NOT submitted
+      submit_button_selector : 'button#save_changes_btn',
+      message : /Details for .+ were updated/,
+    })
+    .then(function(){ done() });
+  });
+
+  it('Verify auto_approve is still true and lastname is updated', function(done){
+    open_page_func({ // Re-open page
+      url    : application_host + 'users/edit/'+auto_approve_user_id+'/',
+      driver : driver,
+    })
+    .then(() => driver.findElement(By.css('input[name="auto_approve"]')))
+    .then(checkbox => checkbox.isSelected())
+    .then(is_selected => {
+      expect(is_selected).to.be.true;
+      return driver.findElement(By.css('input[name="lastname"]'));
+    })
+    .then(lastname_field => lastname_field.getAttribute('value'))
+    .then(lastname_value => {
+      expect(lastname_value).to.be.equal('AutoApproveTestLastName');
+      done();
+    });
+  });
+  // End of tests for auto_approve
 
   after(function(done){
     driver.quit().then(function(){ done(); });
