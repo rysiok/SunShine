@@ -49,8 +49,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
-      - name: "Pull docker image for Synk"
-        run: docker pull ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
+#      - name: "Pull docker image for Synk"
+#        run: docker pull ${{ env.DOCKER_METADATA_OUTPUT_TAGS }}
 
       - name: "list images"
         run: docker image ls
@@ -74,7 +74,7 @@ jobs:
         run: |
           sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
 
-      - name: Replace security-severity undefined for license-related findings
+      - name: Replace security-severity null for license-related findings
         run: |
           sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
 
