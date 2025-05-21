@@ -47,7 +47,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          load: true
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -57,7 +56,7 @@ jobs:
         uses: eltimn/slugify-action@v2.0.2
 
       - name: "echo image name"
-        run: echo ${{ build.meta.image.name }}
+        run: echo ${{ build.metadata.image.name }}
 
 
       - name: Run Snyk to check Docker image for vulnerabilities
