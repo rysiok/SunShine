@@ -50,6 +50,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           
+      - name: "Run slugify"
+        id: slugify
+        uses: eltimn/slugify-action@v2
+
+
+
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning
@@ -61,7 +67,7 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha::0:7 }}
+          image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{steps.slugify.outputs.sha}}
           args: --file=Dockerfile
 
       - name: Replace security-severity undefined for license-related findings
