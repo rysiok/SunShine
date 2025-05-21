@@ -1,0 +1,90 @@
+{{> header }}
+
+<h1>OAuth (Azure AD) Authentication</h1>
+
+<p class="lead">Configure OAuth 2.0 / OpenID Connect authentication settings for Azure Active Directory.</p>
+
+{{> show_flash_messages }}
+
+<div class="row main-row_header">
+  <p class="col-md-12">Description</p>
+</div>
+
+<div class="row">
+  <div class="col-md-8 col-md-offset-1">
+    <p>Enable OAuth to allow users to sign in using their Microsoft Azure Active Directory credentials. This provides a seamless and secure single sign-on (SSO) experience.</p>
+    <p>You will need to register this application in your Azure AD tenant to obtain a Client ID, Client Secret, and your Tenant ID.</p>
+  </div>
+</div>
+
+<div class="row main-row_header">
+  <p class="col-md-12">Configuration</p>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form class="form-horizontal" action="/settings/company/authentication/oauth" method="post">
+      <fieldset>
+        <legend>OAuth Settings</legend>
+
+        <div class="form-group">
+          <div class="col-md-9 col-md-offset-3">
+            <label for="oauth_auth_enabled" class="control-label">
+              <input
+                id="oauth_auth_enabled"
+                type="checkbox"
+                {{# if company.oauth_auth_enabled }} checked="checked" {{/if}}
+                name="oauth_auth_enabled"
+               />&nbsp;
+               Enable OAuth (Azure AD) Authentication
+            </label>
+          </div>
+        </div>
+
+        <hr/>
+
+        <div class="form-group">
+          <label for="oauth_client_id" class="col-md-3 control-label">Client ID</label>
+          <div class="col-md-5">
+            <input class="form-control" id="oauth_client_id" placeholder="Enter your Azure AD Application (Client) ID" name="oauth_client_id" value="{{ company.oauth_auth_config.client_id }}" aria-describedby="oauth_client_id_help">
+          </div>
+          <span id="oauth_client_id_help" class="help-block">The Application (Client) ID obtained from Azure AD.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="oauth_client_secret" class="col-md-3 control-label">Client Secret</label>
+          <div class="col-md-5">
+            <input class="form-control" id="oauth_client_secret" placeholder="Enter your Azure AD Client Secret" name="oauth_client_secret" value="{{ company.oauth_auth_config.client_secret }}" type="password" aria-describedby="oauth_client_secret_help">
+          </div>
+          <span id="oauth_client_secret_help" class="help-block">The Client Secret obtained from Azure AD. Leave blank if you do not want to change it.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="oauth_tenant_id" class="col-md-3 control-label">Tenant ID</label>
+          <div class="col-md-5">
+            <input class="form-control" id="oauth_tenant_id" placeholder="Enter your Azure AD Directory (Tenant) ID" name="oauth_tenant_id" value="{{ company.oauth_auth_config.tenant_id }}" aria-describedby="oauth_tenant_id_help">
+          </div>
+          <span id="oauth_tenant_id_help" class="help-block">The Directory (Tenant) ID for your Azure AD.</span>
+        </div>
+        
+        <div class="form-group">
+          <label for="oauth_callback_url" class="col-md-3 control-label">Callback URL (Read-only)</label>
+          <div class="col-md-5">
+            <input class="form-control" id="oauth_callback_url" name="oauth_callback_url" value="{{ azure_ad_callback_url }}" readonly>
+          </div>
+          <span id="oauth_callback_url_help" class="help-block">This is the URL you should configure in Azure AD as the Redirect URI. It is based on your application's domain settings.</span>
+        </div>
+
+      </fieldset>
+
+      <div class="form-group">
+        <div class="col-md-offset-3 col-md-5">
+          <button id="submit_oauth_settings" type="submit" class="pull-right btn btn-success single-click">Save OAuth Configuration</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{{> footer }}
