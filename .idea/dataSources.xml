@@ -6,15 +6,6 @@
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/db.development.sqlite</jdbc-url>
-      <driver-properties>
-        <property name="enable_load_extension" value="true" />
-      </driver-properties>
-    </data-source>
-    <data-source source="LOCAL" name="db.development.sqlite [2]" uuid="647613fc-1c2c-4fbc-a13e-51d2e03138e9">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../timeoff-management/db.development.sqlite</jdbc-url>
     </data-source>
   </component>
 </project>

@@ -40,5 +40,5 @@ RUN git clone $GIT $APPDIR
 WORKDIR /$ROOTDIR/$APPDIR
 
 RUN npm install
-
+CMD ["npm", "run-script", "db-update"]
 CMD ["npm", "start"]
