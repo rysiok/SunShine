@@ -56,7 +56,7 @@ jobs:
         uses: eltimn/slugify-action@v2.0.2
 
       - name: "echo image name"
-        run: echo ${{ build.metadata.image.name }}
+        run: echo ${{ steps.build.metadata.image.name }}
 
 
       - name: Run Snyk to check Docker image for vulnerabilities
