@@ -68,7 +68,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{steps.slugify.outputs.sha}}
-          args: --file=Dockerfile
+          #args: --file=Dockerfile
 
       - name: Replace security-severity undefined for license-related findings
         run: |
