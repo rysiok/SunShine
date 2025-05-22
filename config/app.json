@@ -1,7 +1,7 @@
 {
   "allow_create_new_accounts" : false,
   "send_emails"              : true,
-  "application_sender_email" : "ryszard.krakowiak@wolterskluwer.com",
+  "application_sender_email" : "### sender_email ###",
   "email_transporter" : {
     "host" : "127.0.0.1",
     "port" : 25,
@@ -18,9 +18,9 @@
     }
   },
   "ga_analytics_on" : false,
-  "crypto_secret" : "!2~`HswpPPLa33+=±§sdq qwe,Dppp q#wok$F_",
+  "crypto_secret" : "### r3pl@Ce-D3fault_Crypt0_Secret ###",
   "application_domain" : "https://sunshine.wolterskluwer.pl",
   "promotion_website_domain" : "https://sunshine.wolterskluwer.pl",
   "locale_code_for_sorting": "en",
-  "force_to_explicitly_select_type_when_requesting_new_leave": false
+  "force_to_explicitly_select_type_when_requesting_new_leave": true
 }
