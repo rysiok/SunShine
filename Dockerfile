@@ -42,5 +42,7 @@ WORKDIR /$ROOTDIR
 RUN git clone $GIT $APPDIR
 WORKDIR /$ROOTDIR/$APPDIR
 
+
+RUN npm set unsafe-perm true
 RUN npm install
 CMD ["npm", "start"]
