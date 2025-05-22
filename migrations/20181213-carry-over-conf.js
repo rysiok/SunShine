@@ -6,10 +6,10 @@ const models = require('../lib/model/db');
 module.exports = {
   up: (queryInterface, Sequelize) => {
 
-    queryInterface.describeTable('Companies').then((attributes) => {
+    return queryInterface.describeTable('Companies').then((attributes) => {
 
       if (attributes.hasOwnProperty('carry_over')) {
-        return 1;
+        return Promise.resolve();
       }
 
       return queryInterface.addColumn(

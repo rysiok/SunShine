@@ -6,10 +6,10 @@ var models = require('../lib/model/db');
 module.exports = {
   up: (queryInterface, Sequelize) => {
 
-    queryInterface.describeTable('Companies').then(attributes => {
+    return queryInterface.describeTable('Companies').then(attributes => {
 
       if (attributes.hasOwnProperty('is_team_view_hidden')) {
-        return 1;
+        return Promise.resolve();
       }
 
       return queryInterface.addColumn(

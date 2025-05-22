@@ -7,10 +7,12 @@ const
   models = require('../lib/model/db');
 
 module.exports = {
-  up: () => {
-    return models.EmailAudit.findAll()
-      .map(rec => rec.update({body : htmlToText.fromString(rec.body)}), {concurrency: 1})
-      .then(() => console.log('Done!'));
+  up: async () => {
+    const records = await models.EmailAudit.findAll();
+    return Promise.map(records, rec => {
+      return rec.update({ body: htmlToText.fromString(rec.body) });
+    }, { concurrency: 1 })
+    .then(() => console.log('Done!'));
   },
 
   // Do nothing

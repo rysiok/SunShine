@@ -5,10 +5,10 @@ var models = require('../lib/model/db');
 module.exports = {
   up: function (queryInterface, Sequelize) {
 
-    queryInterface.describeTable('LeaveTypes').then(function(attributes){
+    return queryInterface.describeTable('LeaveTypes').then(function(attributes){
 
       if (attributes.hasOwnProperty('auto_approve')) {
-        return 1;
+        return Promise.resolve();
       }
 
       return queryInterface.addColumn(

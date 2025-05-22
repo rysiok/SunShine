@@ -6,10 +6,10 @@ var models = require('../lib/model/db');
 module.exports = {
   up: function (queryInterface, Sequelize) {
 
-    queryInterface.describeTable('Companies').then(function(attributes){
+    return queryInterface.describeTable('Companies').then(function(attributes){
 
       if (attributes.hasOwnProperty('company_wide_message')) {
-        return 1;
+        return Promise.resolve();
       }
 
       return queryInterface.addColumn(
