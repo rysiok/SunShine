@@ -5,7 +5,8 @@ $(document).ready(function () {
     e.stopPropagation();
 
     var delete_form = $('#delete_bankholiday_form');
-    delete_form.attr('action', delete_form.attr('action') + $(this).attr('value') + '/');
+    var sanitizedValue = encodeURIComponent($(this).attr('value'));
+    delete_form.attr('action', delete_form.attr('action') + sanitizedValue + '/');
 
     delete_form.submit();
 
