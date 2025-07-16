@@ -12,7 +12,7 @@
 # docker exec -ti --user root sunshine npm run-script db-update
 #
 # 4. Run with:
-#	docker run -d -p 3000:3000 --name sunshine sunshine
+#	docker run -d -p 3000:8000 --name sunshine sunshine
 #
 # 5. Login to running container (to update config (vi config/app.json):
 #	docker exec -ti --user root sunshine /bin/sh
