@@ -19,7 +19,7 @@
 # --------------------------------------------------------------------
 FROM node:14-alpine
 
-EXPOSE 3000
+EXPOSE 8000
 
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.docker.cmd="docker run -d -p 3000:3000 --name sunshine"
